@@ -1,5 +1,9 @@
-/* PMO Hub theme tokens. Light = "Warm Paper", dark = "Midnight".
-   Change the look of the whole app here; styles.css only uses these names. */
+/* Design tokens. Light = "Warm Paper", dark = "Midnight".
+   Change the look of a whole app here; components only use these names.
+
+   Theme selection:
+     - default: follows the OS (prefers-color-scheme)
+     - <html data-theme="light"> or <html data-theme="dark"> forces one */
 :root {
   color-scheme: light;
   --font: 'Segoe UI', system-ui, -apple-system, sans-serif;

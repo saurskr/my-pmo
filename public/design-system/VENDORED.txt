@@ -1,0 +1,3 @@
+Vendored copy of https://github.com/saurskr/design-system (commit 9d5ffb9).
+Do not edit these files here; change them in the design-system repo and copy them over again
+(tokens/, base/, components/, all.css).

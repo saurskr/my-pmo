@@ -19,8 +19,8 @@ npx serve public
 ```
 
 Use `http://localhost` (or any `https://` host such as GitHub Pages / Azure Static Web Apps).
-Browsers only allow the backup-file feature in a secure context. Opening `index.html`
-straight from the disk also shows your data, but without the backup file.
+The pages use ES modules and the backup-file feature needs a secure context, so opening
+`index.html` straight from the disk does not work.
 
 ## Where your data lives
 
@@ -42,4 +42,4 @@ There is a single local user, so Notes are simply yours; there is no login or Ad
 - `public/settings.html`, `settings.js` — backup file, download / restore
 - `public/local-api.js` — the data layer (IndexedDB + validation); same calls the server used to answer
 - `public/file-sync.js` — optional backup-file mirror (File System Access API)
-- `public/theme.css` — colours (light = Warm Paper, dark = Midnight)
+- `public/design-system/` — a vendored copy of https://github.com/saurskr/design-system (colours, base styles, components, status icons). Change it there, then copy `tokens/`, `base/`, `components/` and `all.css` over; `VENDORED.txt` records the commit.

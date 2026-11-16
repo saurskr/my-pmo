@@ -71,9 +71,10 @@
     },
   };
   // Pages without their own data (Settings) load the entries just for the menu.
-  if (!window.pmoHasData) {
-    window.pmoApi('GET', '/api/data').then(d => { if (d && d.items) window.pmoNav.update(d.items); }).catch(() => {});
-  }
+  // (After the page's own script has run, so we know whether it loads the entries itself.)
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!window.pmoHasData) window.pmoApi('GET', '/api/data').then(d => { if (d && d.items) window.pmoNav.update(d.items); }).catch(() => {});
+  });
 
   window.addEventListener('hashchange', () => {
     nav.querySelectorAll('[data-tab]').forEach(a => {

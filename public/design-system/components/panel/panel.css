@@ -1,0 +1,13 @@
+/* Panel (header + body), stat tiles, empty state. */
+
+.stats { display: flex; flex-wrap: wrap; gap: 8px; }
+.stat { display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
+.stat b { font-size: 18px; }
+.stat.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.stat.zero { opacity: .55; }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.panel-head select { width: auto; }
+
+.empty { padding: 30px; text-align: center; color: var(--muted); }

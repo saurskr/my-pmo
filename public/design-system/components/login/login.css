@@ -1,0 +1,16 @@
+/* Sign-in card, divider and message banners. */
+
+/* login */
+.login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; background: var(--bg); }
+.login-card { width: 100%; max-width: 380px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); padding: 32px 28px; display: flex; flex-direction: column; gap: 16px; }
+.login-card .logo { display: block; width: 160px; height: 48px; margin: 0 auto 4px; object-fit: contain; }
+.login-card h1 { text-align: center; }
+.login-card label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+.login-card input { font-size: 15px; padding: 9px 10px; }
+.login-card button { padding: 10px 12px; font-size: 15px; width: 100%; }
+.divider { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; }
+.divider::before, .divider::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+.msg { font-size: 13px; padding: 8px 10px; border-radius: var(--r-sm); }
+.msg.err { color: var(--red); background: color-mix(in srgb, var(--red) 10%, transparent); }
+.msg.info { color: var(--text); background: var(--surface-2); }
+.msg.ok { color: var(--green); background: color-mix(in srgb, var(--green) 12%, transparent); }
