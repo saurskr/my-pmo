@@ -40,7 +40,7 @@
     el.title = detail || '';
   }
   async function api(method, path, body) {
-    return window.pmoApi(method, path, body);
+    return window.pmoPlatform.api(method, path, body);
   }
   // Wait for the server before changing the screen, so what you see is what was saved.
   async function save(change) {

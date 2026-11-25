@@ -1,7 +1,6 @@
 (() => {
 'use strict';
 
-const KEY = 'pmo-hub-v1';
 const DAY = 86400000;
 const STALE_DAYS = 14;
 
@@ -53,14 +52,6 @@ try { detailsOpen = localStorage.getItem('pmo-hub-details-open') !== '0'; } catc
 const peekText = s => (s || '').split('\n').find(l => l.trim()) || 'No detailed notes yet';
 const ui = { type: hashType(), q: '', team: '', label: '', sort: 'attention', showDone: true, status: '', range: 'auto', openId: null, noteLabel: '' };
 
-// Data from before shared storage existed lived in this browser. Only read for a one-time copy.
-function loadLocal() {
-  try {
-    const s = JSON.parse(localStorage.getItem(KEY));
-    if (s && Array.isArray(s.items)) return normalise(s);
-  } catch (e) { /* storage unavailable or corrupt */ }
-  return null;
-}
 function normalise(s) {
   const labels = Array.isArray(s.labels) ? s.labels.slice() : DEFAULT_LABELS.slice();
   for (const it of s.items) {
@@ -87,7 +78,7 @@ const showSaving = () => { const el = $('#save-status'); if (!el || el.dataset.k
 const hasPending = () => pending.replace || pending.labels || pending.upserts.size > 0 || pending.deletes.size > 0;
 
 async function api(method, path, body) {
-  return window.pmoApi(method, path, body);
+  return window.pmoPlatform.api(method, path, body);
 }
 
 function scheduleSync(delay = 500) {
@@ -132,6 +123,7 @@ window.addEventListener('beforeunload', e => { if (hasPending() || syncing) { e.
 async function init() {
   $('#list').innerHTML = '<div class="empty">Loading…</div>';
   setSaveStatus('loading');
+  await window.pmoPlatform.ready; // the platform has confirmed who is signed in (or sent them to sign in)
   let data;
   try { data = await api('GET', '/api/data'); }
   catch (e) {
@@ -144,12 +136,8 @@ async function init() {
   if (data.initialized) {
     state = normalise(data);
   } else {
-    // First run on this store: bring over anything saved in this browser, otherwise start with samples.
-    const local = loadLocal();
-    if (local && local.items.length && confirm(`This browser has ${local.items.length} entries saved by an earlier version.\n\nKeep them?`)) state = local;
-    else if (local && local.items.length) state = { items: [], labels: DEFAULT_LABELS.slice() };
-    else state = seed();
-    save();
+    // A brand-new database: start empty (the ⋯ menu can load sample data).
+    state = { items: [], labels: DEFAULT_LABELS.slice() };
   }
   renderAll();
   openFromHash();

@@ -1,0 +1,19 @@
+{
+  "name": "my-pmo-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "my-pmo web platform: Node host with SQL Server Express storage, login/password and SAML 2.0 sign-in.",
+  "license": "UNLICENSED",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test test/"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@node-saml/node-saml": "^5.2.0",
+    "mssql": "^12.8.1"
+  }
+}

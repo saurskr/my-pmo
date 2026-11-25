@@ -1,9 +1,12 @@
 // Shared by every page: builds the sidebar and applies the theme choice.
+// Who is signed in, the platform's own menu links and sign-out all come from window.pmoPlatform (see platform.js).
 (async () => {
   const side = document.getElementById('side');
   if (!side) return;
 
-  const page = location.pathname.endsWith('settings.html') ? 'settings' : location.pathname.endsWith('notes.html') ? 'notes' : 'summary';
+  const platform = window.pmoPlatform;
+  const me = await platform.ready;
+  const page = location.pathname.endsWith('notes.html') ? 'notes' : location.pathname.endsWith('index.html') || location.pathname.endsWith('/') ? 'summary' : 'other';
   const TABS = [['', 'Summary'], ['project', 'Projects'], ['vendor', 'Vendors'], ['roadmap', 'Roadmap'], ['quickwin', 'Quick Wins']];
   const currentTab = () => location.hash.slice(1).split('/')[0];
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -40,9 +43,13 @@
     <div class="brand">my-pmo</div>
     <nav aria-label="Main" id="nav"></nav>
     <div class="side-foot">
-      <div class="who">Saved in this browser<small>No account, no server</small></div>
+      ${me ? `<div class="who">${esc(me.email)}<small>${esc(me.role === 'admin' ? 'Administrator' : 'User')}</small></div>` : ''}
       <button id="btn-theme" title="Theme: auto / light / dark" aria-label="Switch theme"></button>
+      ${platform.signOut ? '<button id="btn-signout">Sign out</button>' : ''}
     </div>`;
+
+  const links = (platform.nav || []).filter(l => !l.adminOnly || (me && me.role === 'admin'));
+  const platformLinks = () => (links.length ? '<hr>' + links.map(l => `<a href="${esc(l.href)}"${location.pathname.endsWith(l.href.replace(/^\//, '')) ? ' aria-current="page"' : ''}>${esc(l.label)}</a>`).join('') : '');
 
   const nav = document.getElementById('nav');
   if (window.pmoItems) items = window.pmoItems;
@@ -50,7 +57,7 @@
     nav.innerHTML = tabLink(TABS[0]) +
       `<a href="notes.html"${page === 'notes' ? ' aria-current="page"' : ''}>Notes</a>` +
       TABS.slice(1).map(tabLink).join('') +
-      `<hr><a href="settings.html"${page === 'settings' ? ' aria-current="page"' : ''}>Settings</a>`;
+      platformLinks();
   };
   renderNav();
 
@@ -73,7 +80,7 @@
   // Pages without their own data (Settings) load the entries just for the menu.
   // (After the page's own script has run, so we know whether it loads the entries itself.)
   document.addEventListener('DOMContentLoaded', () => {
-    if (!window.pmoHasData) window.pmoApi('GET', '/api/data').then(d => { if (d && d.items) window.pmoNav.update(d.items); }).catch(() => {});
+    if (!window.pmoHasData) platform.api('GET', '/api/data').then(d => { if (d && d.items) window.pmoNav.update(d.items); }).catch(() => {});
   });
 
   window.addEventListener('hashchange', () => {
@@ -96,4 +103,7 @@
     try { theme === 'auto' ? localStorage.removeItem('pmo-hub-theme') : localStorage.setItem('pmo-hub-theme', theme); } catch (e) { /* ignore */ }
     apply(theme);
   });
+
+  const out = document.getElementById('btn-signout');
+  if (out) out.addEventListener('click', () => platform.signOut());
 })();
