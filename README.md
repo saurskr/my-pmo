@@ -1,45 +1,99 @@
-# my-pmo (serverless edition)
+# my-pmo
 
-A lightweight hub for IT leadership to keep a finger on many projects and major
-items at once — without turning into a task tracker.
+A lightweight hub for IT leadership to keep a finger on many projects and major items at once —
+without turning into a task tracker: status icons, labelled notes, a focus list of five, a timeline,
+and a private diary with meeting names.
 
-This branch has **no server, no database and no sign-in**. It is plain HTML/CSS/JS that
-runs in your browser and keeps its data there. (The Node server + SQL Server Express
-edition lives on `main`.)
+One source, several ways to run it. The app itself lives in `core/` and never talks to a database or
+a sign-in system directly; each **platform** supplies those two things.
 
-## Run it
+| Platform | Data is stored in | Authentication | Setup | Status |
+|---|---|---|---|---|
+| **Web** (`platforms/web`) | SQL Server Express | Login/password and SAML 2.0 (e.g. Microsoft Entra) | First-run wizard: connect, then create a new database or load an existing one | **Built** |
+| **Android** (`platforms/android`) | Google Drive | Google (Gmail) sign-in | — | Planned |
+| **Microsoft stack** (`platforms/powerapps`) | Dataverse | Inherited from Power Platform (Entra SSO) | Publishing creates the Dataverse tables | Planned |
 
-Serve the `public/` folder with any static web server, then open the address it prints.
-The simplest ones:
+See [`docs/architecture.md`](docs/architecture.md) for how the pieces fit and what a new platform has to provide.
+
+## Run the web platform
+
+You need **Node.js 18+** and **SQL Server Express** (free; install it yourself from
+[Microsoft's download page](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)).
+In SQL Server Express, turn on **mixed-mode** authentication (so a SQL login can be used) and **TCP/IP**
+(SQL Server Configuration Manager). For a named instance such as `localhost\SQLEXPRESS` the *SQL Server Browser*
+service must be running, or use `localhost,<port>` instead.
 
 ```
-python3 -m http.server 8000 --directory public      # then open http://localhost:8000
-# or
-npx serve public
+cd platforms/web
+npm install
+node server.js
 ```
 
-Use `http://localhost` (or any `https://` host such as GitHub Pages / Azure Static Web Apps).
-The pages use ES modules and the backup-file feature needs a secure context, so opening
-`index.html` straight from the disk does not work.
+The terminal prints a **setup code** and the address (http://localhost:3000). Open `/setup.html` and:
 
-## Where your data lives
+1. enter the setup code (it proves you are the person who started the server),
+2. enter the server, database name and SQL login, and press **Test connection**,
+3. choose **Create a new database** or **Use an existing database** (an older my-pmo database is upgraded in place; its data is kept),
+4. create the first administrator (skipped if the database already has one).
 
-- **In the browser** (IndexedDB), per browser and per address. Entries, pins, labels and Notes.
-  Clearing the site's data removes them — keep a backup.
-- **Backup file (Settings → Backup file)** — Chrome or Edge. Pick a file, for example in your
-  OneDrive folder, and every change is also written there. On another device choose
-  *Use an existing file* to carry on from it. If the browser asks for permission again,
-  press *Allow access again*; changes are kept in the browser meanwhile.
-- **Download / Restore (Settings)** — one JSON file with everything, works in any browser.
-- The Summary page's *Export JSON* covers entries only; Settings → Download backup also includes Notes.
+After that you land in the app, signed in. Everyone else signs in at the login page.
+The SQL login needs the `dbcreator` role to create a database, or `db_owner` on a database that already exists.
 
-There is a single local user, so Notes are simply yours; there is no login or Administration page.
+### Settings
 
-## Files
+| Environment variable | Meaning | Default |
+|---|---|---|
+| `PORT` | Port to listen on | `3000` |
+| `HOST` | Address to listen on. Set `0.0.0.0` so other computers can reach it | `127.0.0.1` (this computer only) |
+| `COOKIE_SECURE` | Set `1` when users reach it over HTTPS (behind a proxy) | detected from the request |
+| `PMO_DATA_DIR` | Where `config.json` (the database connection) is kept | `platforms/web/data` |
 
-- `public/index.html`, `app.js` — Summary (sidebar, Focus, list, Gantt, entry drawer)
-- `public/notes.html`, `notes.js` — Notes: calendar and diary with meeting names
-- `public/settings.html`, `settings.js` — backup file, download / restore
-- `public/local-api.js` — the data layer (IndexedDB + validation); same calls the server used to answer
-- `public/file-sync.js` — optional backup-file mirror (File System Access API)
-- `public/design-system/` — a vendored copy of https://github.com/saurskr/design-system (colours, base styles, components, status icons). Change it there, then copy `tokens/`, `base/`, `components/` and `all.css` over; `VENDORED.txt` records the commit.
+### Administration (administrators)
+
+- **Users** — add people, set roles, reset passwords, delete accounts. The last administrator can't be removed or demoted.
+- **Single sign-on (SAML 2.0)** — shows the Identifier, Reply URL and Sign-on URL to give your identity provider
+  (also published as metadata at `/api/sso/metadata`); you paste back the Login URL, the identity provider's identifier and its
+  signing certificate. For Microsoft Entra ID, create an enterprise application → Single sign-on → SAML and keep
+  *Sign SAML assertion* on (its default). People who sign in this way get an account automatically (optional) with the
+  *User* role; you can restrict by email domain. Password sign-in keeps working alongside it.
+- **Database** — connection details and schema version, with an **Update schema** button after upgrading my-pmo.
+
+### Command line
+
+```
+node server.js add-user <email> <password> [admin]   # create or reset an account (e.g. a forgotten password)
+node server.js reconfigure                           # forget the database connection and run setup again (the database is untouched)
+```
+
+### Good to know
+
+- **Data protection:** the SQL password is stored in `platforms/web/data/config.json` (readable only by the account that runs the server). Passwords are salted scrypt hashes in the database. Use a dedicated SQL login rather than `sa`.
+- **HTTPS:** the server speaks plain HTTP; put it behind a reverse proxy for HTTPS when it is shared, and set the *Application URL* in Administration to the public address so the SAML URLs are right.
+- **Sessions** are kept in memory: restarting the server signs everyone out. Sign-in is rate-limited after repeated failures.
+- **Single sign-out** is not implemented: *Sign out* ends the my-pmo session only.
+- **Edits to the same entry** by two people are last-write-wins; other people's changes appear when you reload or return to the tab.
+- **Notes** (the diary) are private to each person in the app, but they are stored in the same database, so anyone with database access can read them.
+
+## Tests
+
+```
+cd platforms/web
+PMO_TEST_SQL='localhost,1433|sa|<password>' npm test
+```
+
+The tests start the real server against a real SQL Server (they create and drop their own throwaway databases), and include a
+mock SAML identity provider that signs real responses — good ones and forged, unsigned, replayed, expired and mis-addressed ones.
+Without `PMO_TEST_SQL` the database tests are skipped.
+
+## Layout
+
+```
+core/                    the app, shared by every platform
+  index.html  notes.html   Summary and Notes pages
+  app.js  notes.js  shell.js  status.js
+  design-system/           vendored copy of github.com/saurskr/design-system (all styling)
+platforms/
+  web/                   Node host: setup wizard, sign-in, SAML, administration, SQL Server storage
+  android/  powerapps/   placeholders for later (see their READMEs)
+docs/                    architecture notes and design mockups
+```

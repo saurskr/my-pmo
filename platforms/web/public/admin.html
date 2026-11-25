@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Administration – my-pmo</title>
+<script src="theme-init.js"></script>
+<link rel="stylesheet" href="design-system/all.css">
+<link rel="stylesheet" href="platform.css">
+</head>
+<body>
+<div class="shell">
+<aside class="side" id="side"></aside>
+<div class="content">
+<header class="top"><h1>Administration</h1></header>
+<div class="admin admin-wide">
+
+  <section class="card">
+    <h2>Users</h2>
+    <p>People who can sign in with an email and password. Anyone who signs in through single sign-on appears here too.</p>
+    <div id="users-msg" class="msg" role="status" hidden></div>
+    <div class="users" id="users"></div>
+    <form class="add-user" id="add-user" novalidate>
+      <label class="field">Email<input id="u-email" type="email" autocomplete="off"></label>
+      <label class="field">Password<input id="u-pw" type="password" autocomplete="new-password"></label>
+      <label class="field">Role<select id="u-role"><option value="user">User</option><option value="admin">Administrator</option></select></label>
+      <button class="primary" type="submit">Add user</button>
+    </form>
+  </section>
+
+  <form class="card" id="sso-form" novalidate>
+    <h2>Single sign-on (SAML 2.0)</h2>
+    <p>Let people sign in with your organisation's identity provider, such as Microsoft Entra ID. The password sign-in keeps working alongside it.</p>
+    <div id="sso-msg" class="msg" role="status" hidden></div>
+    <label class="toggle"><input type="checkbox" id="enabled"> Turn on single sign-on</label>
+    <label class="field">Identity provider
+      <select id="provider"><option value="entra">Microsoft Entra ID</option><option value="saml">Other SAML 2.0 provider</option></select>
+    </label>
+
+    <h3 class="step">1. Give these to your identity provider</h3>
+    <p id="help-give"></p>
+    <label class="field">Identifier (Entity ID)<div class="copy"><input id="d-entity" readonly><button type="button" data-copy="d-entity">Copy</button></div></label>
+    <label class="field">Reply URL (Assertion Consumer Service)<div class="copy"><input id="d-reply" readonly><button type="button" data-copy="d-reply">Copy</button></div></label>
+    <label class="field">Sign-on URL<div class="copy"><input id="d-signon" readonly><button type="button" data-copy="d-signon">Copy</button></div></label>
+    <label class="field">Application URL (optional)
+      <input id="baseUrl" placeholder="https://pmo.example.com">
+      <small>Set this when people reach my-pmo at a different address than the one you're using now (for example behind a proxy). The three values above are built from it.</small>
+    </label>
+    <p><a href="/api/sso/metadata" target="_blank" rel="noopener">Open service provider metadata (XML)</a> — some providers can import it instead of typing the values.</p>
+
+    <h3 class="step">2. Paste these from your identity provider</h3>
+    <p id="help-get"></p>
+    <label class="field">Login URL<input id="loginUrl" placeholder="https://login.microsoftonline.com/…/saml2" spellcheck="false"></label>
+    <label class="field"><span id="l-issuer">Identifier of the identity provider</span><input id="idpIssuer" placeholder="https://sts.windows.net/…/" spellcheck="false"></label>
+    <label class="field">Signing certificate (Base64)<textarea id="certificate" placeholder="MIIC…  (paste the certificate; the BEGIN/END lines are optional)" spellcheck="false"></textarea></label>
+
+    <h3 class="step">3. Who may sign in</h3>
+    <label class="field">Email attribute (optional)<input id="emailClaim" placeholder="Leave blank to detect it" spellcheck="false"><small>The attribute the identity provider sends the email address in. Blank tries the usual ones, then the name identifier.</small></label>
+    <label class="field">Allowed email domains (optional)<input id="allowedDomains" placeholder="example.com, example.org" spellcheck="false"><small>Blank allows anyone the identity provider vouches for.</small></label>
+    <label class="toggle"><input type="checkbox" id="autoProvision"> Create an account the first time someone signs in <small class="muted">(as a normal user; turn off to allow only people already listed above)</small></label>
+    <div class="actions"><button class="primary" type="submit">Save</button></div>
+  </form>
+
+  <section class="card">
+    <h2>Database</h2>
+    <div id="db-msg" class="msg" role="status" hidden></div>
+    <dl class="kv" id="db"></dl>
+    <div class="actions"><button type="button" id="db-update" hidden>Update schema</button></div>
+    <p class="muted"><small>The connection details are kept in <code>platforms/web/data/config.json</code> on the server. To point my-pmo at a different database, stop the server and run <code>node server.js reconfigure</code>.</small></p>
+  </section>
+
+</div>
+</div>
+</div>
+<script src="platform.js"></script>
+<script type="module" src="status.js"></script>
+<script type="module" src="shell.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

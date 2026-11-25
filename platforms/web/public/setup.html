@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Set up – my-pmo</title>
+<link rel="stylesheet" href="/design-system/all.css">
+<link rel="stylesheet" href="/platform.css">
+</head>
+<body>
+<main class="setup">
+  <header class="setup-head"><img class="logo" src="/logo.png" alt=""><h1>Set up my-pmo</h1>
+    <p>my-pmo keeps everything — projects, notes and accounts — in a Microsoft SQL Server Express database. This takes about a minute.</p></header>
+
+  <section class="card" id="s1">
+    <h2>1. Get SQL Server Express</h2>
+    <p>my-pmo doesn't install it for you. If you don't have it yet, <a id="dl" href="https://www.microsoft.com/en-us/sql-server/sql-server-downloads" target="_blank" rel="noopener">download SQL Server Express</a> (free) and install it. Turn on <b>mixed-mode</b> (SQL login) authentication and <b>TCP/IP</b>.</p>
+    <label class="field">Setup code<input id="token" autocomplete="off" spellcheck="false" placeholder="Printed in the terminal where you started the server"><small>This proves you are the person who started the server.</small></label>
+  </section>
+
+  <form class="card" id="s2" novalidate>
+    <h2>2. Connect to the database server</h2>
+    <label class="field">Server<input id="server" value="localhost\SQLEXPRESS" spellcheck="false"><small>For example <code>localhost\SQLEXPRESS</code>, or <code>localhost,1433</code> to use a port.</small></label>
+    <label class="field">Database name<input id="database" value="my_pmo" spellcheck="false"><small>The one to create, or the existing one to use.</small></label>
+    <div class="two">
+      <label class="field">SQL login<input id="user" autocomplete="off" spellcheck="false" placeholder="e.g. sa or a dedicated login"></label>
+      <label class="field">Password<input id="password" type="password" autocomplete="new-password"></label>
+    </div>
+    <label class="toggle"><input type="checkbox" id="trust" checked> Trust the server's certificate <small class="muted">(Express uses a self-signed one)</small></label>
+    <div class="actions"><button type="submit" class="primary" id="test">Test connection</button></div>
+    <div id="test-msg" class="msg" role="status" hidden></div>
+  </form>
+
+  <section class="card" id="s3" hidden>
+    <h2>3. Create a new database or use an existing one</h2>
+    <label class="choice"><input type="radio" name="mode" value="create" id="m-create"><span><b>Create a new database</b><small id="d-create"></small></span></label>
+    <label class="choice"><input type="radio" name="mode" value="existing" id="m-existing"><span><b>Use an existing database</b><small id="d-existing"></small></span></label>
+  </section>
+
+  <section class="card" id="s4" hidden>
+    <h2>4. Create the first administrator</h2>
+    <p>This is the account you will sign in with. You can add more people later under Administration.</p>
+    <label class="field">Email<input id="a-email" type="email" autocomplete="off"></label>
+    <label class="field">Password<input id="a-password" type="password" autocomplete="new-password"><small>At least 8 characters.</small></label>
+  </section>
+
+  <section class="card" id="s5" hidden>
+    <div class="actions"><button class="primary" id="finish">Finish setup</button></div>
+    <div id="finish-msg" class="msg" role="status" hidden></div>
+  </section>
+</main>
+<script src="/setup.js"></script>
+</body>
+</html>

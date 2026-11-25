@@ -43,6 +43,13 @@ async function handle(app, req, res, url) {
     const info = await sqlserver.inspect(cfg);
     const steps = [];
 
+    // Check what we can before touching the database. A new database, or one with no administrator yet, needs one.
+    let newAdmin = null;
+    if (mode === 'create' || !info.adminCount) {
+      const a = body.admin || {};
+      newAdmin = { email: auth.cleanEmail(a.email), password: auth.cleanPassword(a.password) };
+    }
+
     if (mode === 'create') {
       if (info.schemaInstalled && info.hasData) throw bad(`The database "${cfg.database}" already holds my-pmo data. Choose "Use an existing database" to keep it.`);
       steps.push(...(await sqlserver.createSchema(cfg, true)).steps);
@@ -57,11 +64,10 @@ async function handle(app, req, res, url) {
     try {
       let user = null;
       if ((await store.countAdmins()) === 0) {
-        const a = body.admin || {};
-        const email = auth.cleanEmail(a.email), password = auth.cleanPassword(a.password);
-        await store.saveUser({ email, role: 'admin', ...(await auth.hashPassword(password)), source: 'local' });
-        steps.push(`Created the administrator ${email}`);
-        user = { email, role: 'admin' };
+        if (!newAdmin) throw bad('Enter the email and password for the first administrator.');
+        await store.saveUser({ email: newAdmin.email, role: 'admin', ...(await auth.hashPassword(newAdmin.password)), source: 'local' });
+        steps.push(`Created the administrator ${newAdmin.email}`);
+        user = { email: newAdmin.email, role: 'admin' };
       } else {
         steps.push('The database already has an administrator, so no new account was created');
       }

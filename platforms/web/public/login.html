@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in – my-pmo</title>
+<link rel="stylesheet" href="/design-system/all.css">
+</head>
+<body>
+<main class="login-page">
+  <form class="login-card" id="form" novalidate>
+    <img class="logo" src="/logo.png" alt="">
+    <h1>Sign in to my-pmo</h1>
+    <div id="msg" class="msg" role="alert" hidden></div>
+    <label>Email<input id="email" type="email" autocomplete="username" required autofocus></label>
+    <label>Password<input id="password" type="password" autocomplete="current-password" required></label>
+    <button class="primary" id="go" type="submit">Sign in</button>
+    <div id="sso" hidden>
+      <div class="divider">or</div>
+      <a class="btn" id="sso-link" href="/api/sso/login" style="display:block;text-align:center;margin-top:12px">Sign in with single sign-on</a>
+    </div>
+  </form>
+</main>
+<script src="login.js"></script>
+</body>
+</html>

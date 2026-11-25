@@ -38,7 +38,7 @@ async function ensureStore() {
 
 /* ---------- which files may be fetched without signing in ---------- */
 
-const PUBLIC_PATHS = new Set(['/login.html', '/login.js', '/setup.html', '/setup.js', '/logo.png', '/theme-init.js']);
+const PUBLIC_PATHS = new Set(['/login.html', '/login.js', '/setup.html', '/setup.js', '/platform.css', '/logo.png', '/theme-init.js']);
 const isPublic = p => PUBLIC_PATHS.has(p) || p.startsWith('/design-system/');
 
 const unavailablePage = msg => `<!doctype html><meta charset="utf-8"><title>my-pmo</title><link rel="stylesheet" href="/design-system/all.css">
@@ -63,7 +63,7 @@ async function handle(req, res) {
   if (!app.configured) {
     if (p.startsWith('/api/')) return send(res, 503, { error: 'my-pmo has not been set up yet.', setupRequired: true });
     if (req.method !== 'GET') return send(res, 405, 'Method not allowed', 'text/plain');
-    if (p === '/setup.html' || p === '/setup.js' || p === '/logo.png' || p === '/theme-init.js' || p.startsWith('/design-system/')) { if (serveFile(res, ROOTS, p)) return; return send(res, 404, 'Not found', 'text/plain'); }
+    if (p !== '/login.html' && p !== '/login.js' && isPublic(p)) { if (serveFile(res, ROOTS, p)) return; return send(res, 404, 'Not found', 'text/plain'); }
     return redirect(res, '/setup.html');
   }
 
@@ -199,7 +199,7 @@ async function admin(req, res, p, me, store) {
       const pw = b.password ? await auth.hashPassword(auth.cleanPassword(b.password)) : {};
       await store.saveUser({ email, role, ...pw, source: u.source });
       auth.updateSessions(email, role);
-      if (b.password) auth.dropSessions(email), (email === me.email && null);
+      if (b.password && email !== me.email) auth.dropSessions(email); // someone else's password changed: sign them out
       return send(res, 200, { ok: true });
     }
   }
@@ -219,7 +219,7 @@ async function admin(req, res, p, me, store) {
 // Validation problems are the caller's fault (400). Admin screens see the real reason for other
 // failures; ordinary users only get a generic message (the detail is logged).
 function fail(req, res, e) {
-  const isAdminApi = req.url.startsWith('/api/admin');
+  const isAdminApi = req.url.startsWith('/api/admin') || req.url.startsWith('/api/setup'); // both are for trusted people, who need the real reason
   const status = e.status || (isAdminApi ? 400 : 500);
   let message = String(e.message).replace(/password=[^;]*/gi, 'password=***');
   if (status >= 500 && !isAdminApi) {
@@ -256,8 +256,8 @@ async function main() {
     catch (e) { app.storeError = e.message; console.error(`Can't reach the database: ${e.message}\nThe server is running and will keep trying.`); }
   }
   http.createServer((req, res) => { handle(req, res).catch(e => fail(req, res, e)); }).listen(PORT, HOST, () => {
-    console.log(`my-pmo running at http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`);
     if (!app.configured) console.log(`\nFirst run. Open http://localhost:${PORT}/setup.html and enter this setup code:\n\n    ${app.setupToken}\n`);
+    console.log(`my-pmo running at http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`);
   });
 }
 

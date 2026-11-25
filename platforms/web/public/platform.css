@@ -1,0 +1,32 @@
+/* Pages that belong to the web platform (setup, administration). Built only from design-system tokens. */
+.setup { max-width: 720px; margin: 0 auto; padding: 28px 20px 70px; display: flex; flex-direction: column; gap: 16px; background: var(--bg); }
+.setup-head { text-align: center; padding: 8px 0 4px; }
+.setup-head .logo { display: block; width: 160px; height: 48px; margin: 0 auto 6px; object-fit: contain; }
+.setup-head p { color: var(--muted); margin: 6px 0 0; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 600px) { .two { grid-template-columns: 1fr; } }
+.choice { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r-sm); cursor: pointer; }
+.choice:has(input:checked) { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.choice:has(input:disabled) { opacity: .55; cursor: not-allowed; }
+.choice input { width: 18px; height: 18px; margin-top: 2px; }
+.choice span { display: flex; flex-direction: column; gap: 2px; }
+.choice small { color: var(--muted); }
+
+/* administration */
+.users { display: flex; flex-direction: column; }
+.urow { display: grid; grid-template-columns: minmax(180px, 2fr) 150px 110px minmax(150px, 1.4fr) auto; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.urow:last-child { border-bottom: 0; }
+.urow.head { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+.urow .em { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.urow .acts { display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap; }
+.urow .acts button { padding: 3px 8px; font-size: 12px; }
+.urow select { width: auto; padding: 3px 6px; }
+.pw { display: flex; gap: 6px; grid-column: 1 / -1; }
+@media (max-width: 860px) { .urow { grid-template-columns: 1fr auto; } .urow.head { display: none; } .urow .role, .urow .src, .urow .last { grid-column: 1; font-size: 13px; color: var(--muted); } }
+.add-user { display: grid; grid-template-columns: 2fr 1.4fr 110px auto; gap: 8px; align-items: end; }
+@media (max-width: 860px) { .add-user { grid-template-columns: 1fr 1fr; } }
+.kv { display: grid; grid-template-columns: 150px 1fr; gap: 4px 12px; margin: 0; }
+.kv dt { color: var(--muted); } .kv dd { margin: 0; }
+.admin-wide { max-width: 980px; }
+
+.card a, .msg a, .setup a { color: var(--accent); }
