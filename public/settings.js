@@ -54,7 +54,7 @@
     const doc = { format: 'pmo-hub', version: 1, savedAt: new Date().toISOString(), items: d.items, labels: d.labels, journal: d.journal };
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([JSON.stringify(doc, null, 1)], { type: 'application/json' }));
-    a.download = `pmo-hub-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `my-pmo-backup-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     say('bk-msg', `Downloaded ${d.items.length} entries and ${d.journal.length} notes.`);
@@ -65,7 +65,7 @@
     if (!f) return;
     try {
       const doc = JSON.parse(await f.text());
-      if (!doc || !Array.isArray(doc.items)) throw new Error("That file isn't a PMO Hub backup or export.");
+      if (!doc || !Array.isArray(doc.items)) throw new Error("That file isn't a my-pmo backup or export.");
       const notes = Array.isArray(doc.journal) ? ` and ${doc.journal.length} notes` : ' (no notes in this file — your current notes are kept)';
       if (!confirm(`Replace what is in this browser with ${doc.items.length} entries${notes}?`)) return;
       await window.pmoLocal.replaceAll(doc);

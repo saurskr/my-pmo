@@ -3,7 +3,7 @@
 // Uses the File System Access API (Chrome / Edge). Elsewhere the app still works; use Export/Import.
 (() => {
   const supported = !!(window.showSaveFilePicker && window.showOpenFilePicker && window.isSecureContext);
-  const FORMAT = 'pmo-hub';
+  const FORMAT = 'pmo-hub'; // internal format id (the app's original name); kept so existing backup files still load
   let handle = null;
   let state = { kind: 'off', detail: '', name: '', savedAt: '' }; // off | ok | needs-permission | error | unsupported
   const listeners = new Set();
@@ -48,7 +48,7 @@
     const text = await (await h.getFile()).text();
     let doc;
     try { doc = JSON.parse(text); } catch (e) { throw new Error('That file is not valid JSON.'); }
-    if (!doc || doc.format !== FORMAT || !Array.isArray(doc.items)) throw new Error("That file isn't a PMO Hub data file.");
+    if (!doc || doc.format !== FORMAT || !Array.isArray(doc.items)) throw new Error("That file isn't a my-pmo data file.");
     return doc;
   }
 
@@ -64,13 +64,13 @@
 
     // Start a new file from what is in the browser now.
     async createFile() {
-      const h = await window.showSaveFilePicker({ suggestedName: 'pmo-hub-data.json', types: [{ description: 'PMO Hub data', accept: { 'application/json': ['.json'] } }] });
+      const h = await window.showSaveFilePicker({ suggestedName: 'my-pmo-data.json', types: [{ description: 'my-pmo data', accept: { 'application/json': ['.json'] } }] });
       await remember(h);
       await writeNow();
     },
     // Use a file you already have (for example from another device). Its contents replace what is in the browser.
     async useExisting() {
-      const [h] = await window.showOpenFilePicker({ types: [{ description: 'PMO Hub data', accept: { 'application/json': ['.json'] } }] });
+      const [h] = await window.showOpenFilePicker({ types: [{ description: 'my-pmo data', accept: { 'application/json': ['.json'] } }] });
       const doc = await readFile(h);
       if (!(await permission(h, true))) throw new Error('Permission to change the file was not granted.');
       await window.pmoLocal.replaceAll(doc);

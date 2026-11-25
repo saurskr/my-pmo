@@ -84,6 +84,7 @@
 
   /* ---------- IndexedDB: one document holding everything ---------- */
 
+  // 'pmo-hub' is the app's original internal name; kept so existing data stays readable after the rename to my-pmo.
   const DB_NAME = 'pmo-hub', STORE = 'kv', KEY = 'data';
   const empty = () => ({ initialized: false, items: [], labels: [], journal: [] });
   let dbPromise = null;

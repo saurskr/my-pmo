@@ -598,7 +598,7 @@ function newLabel() {
 
 function renderAll() {
   document.querySelector('.top h1').textContent = TAB_TITLES[ui.type];
-  document.title = `${TAB_TITLES[ui.type]} – PMO Hub`;
+  document.title = `${TAB_TITLES[ui.type]} – my-pmo`;
   renderFocus(); renderStats(); renderFilters(); renderList(); renderGantt();
   window.pmoItems = state.items; // for a sidebar that finishes loading after the data does
   if (window.pmoNav) pmoNav.update(state.items);
@@ -742,7 +742,7 @@ $('#btn-export').addEventListener('click', () => {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `pmo-hub-${todayStr()}.json`;
+  a.download = `my-pmo-${todayStr()}.json`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 });
@@ -755,7 +755,7 @@ $('#file-import').addEventListener('change', async e => {
     if (!s || !Array.isArray(s.items)) throw new Error('bad shape');
     if (!confirm(`Replace current data with ${s.items.length} imported entries?`)) return;
     state = normalise(s); save(); renderAll();
-  } catch (err) { alert('That file is not a valid PMO Hub export.'); }
+  } catch (err) { alert('That file is not a valid my-pmo export.'); }
 });
 $('#btn-sample').addEventListener('click', () => {
   if (state.items.length && !confirm('Replace current data with sample data?')) return;

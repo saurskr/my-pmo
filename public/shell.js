@@ -37,7 +37,7 @@
   };
 
   side.innerHTML = `
-    <div class="brand">PMO Hub</div>
+    <div class="brand">my-pmo</div>
     <nav aria-label="Main" id="nav"></nav>
     <div class="side-foot">
       <div class="who">Saved in this browser<small>No account, no server</small></div>

@@ -1,4 +1,4 @@
-# PMO Hub (serverless edition)
+# my-pmo (serverless edition)
 
 A lightweight hub for IT leadership to keep a finger on many projects and major
 items at once — without turning into a task tracker.
