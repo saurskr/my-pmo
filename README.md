@@ -12,6 +12,7 @@ a sign-in system directly; each **platform** supplies those two things.
 | **Web** (`platforms/web`) | SQL Server Express | Login/password and SAML 2.0 (e.g. Microsoft Entra) | First-run wizard: connect, then create a new database or load an existing one | **Built** |
 | **Android** (`platforms/android`) | Google Drive | Google (Gmail) sign-in | — | Planned |
 | **Microsoft stack** (`platforms/powerapps`) | Dataverse | Inherited from Power Platform (Entra SSO) | Publishing creates the Dataverse tables | Planned |
+| **Demo** (`platforms/demo`) | A sample JSON file (changes kept in the visitor's browser tab) | None: SQL and sign-in are bypassed | None | **Built** (published with GitHub Pages) |
 
 See [`docs/architecture.md`](docs/architecture.md) for how the pieces fit and what a new platform has to provide.
 
@@ -74,6 +75,20 @@ node server.js reconfigure                           # forget the database conne
 - **Edits to the same entry** by two people are last-write-wins; other people's changes appear when you reload or return to the tab.
 - **Notes** (the diary) are private to each person in the app, but they are stored in the same database, so anyone with database access can read them.
 
+## Demo (GitHub Pages)
+
+`platforms/demo` runs the same app with no server, no SQL Server and no sign-in. The sample data is `platforms/demo/sample-data.json`
+(dates can be relative, such as `+10d` or `-40d`, so the demo never looks out of date). A visitor can edit freely; changes live only in their
+browser tab, and *Reset demo* brings back the original samples.
+
+```
+node platforms/demo/build.mjs      # builds the site into docs/
+```
+
+The built site is committed only on the **`demo`** branch, which GitHub Pages serves: *Settings → Pages → Deploy from a branch → `demo` → `/docs`*.
+After changing `core/` or the sample file, rebuild on the `demo` branch (merge `main` into it first) and push. The site is then at
+`https://<owner>.github.io/<repository>/`.
+
 ## Tests
 
 ```
@@ -94,6 +109,7 @@ core/                    the app, shared by every platform
   design-system/           vendored copy of github.com/saurskr/design-system (all styling)
 platforms/
   web/                   Node host: setup wizard, sign-in, SAML, administration, SQL Server storage
+  demo/                  static demo: sample JSON data, no sign-in (built into docs/ on the demo branch)
   android/  powerapps/   placeholders for later (see their READMEs)
 docs/                    architecture notes and design mockups
 ```

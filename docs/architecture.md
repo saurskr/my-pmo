@@ -43,6 +43,9 @@ and for **owner-scoping** the diary: a person only ever sees and changes their o
 | First-time setup | Wizard: connect, create or load a database, first administrator | — | Publishing creates the tables |
 | Extra pages | `login`, `setup`, `admin` | — | — |
 
+The **demo** platform (`platforms/demo`, built) implements the same contract with no storage or sign-in at all: it reads `sample-data.json`
+and keeps a visitor's edits in `sessionStorage`. `platforms/demo/build.mjs` assembles it, with `core/`, into `docs/` for GitHub Pages.
+
 ## How the web platform serves the app
 
 `platforms/web/server.js` serves two folders as one site: `platforms/web/public` first (its `platform.js`, login, setup and
