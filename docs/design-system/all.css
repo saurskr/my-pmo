@@ -1,0 +1,15 @@
+/* Everything in one import. Load tokens first, then base, then components.
+   Prefer linking just the files you need; this is the convenient route. */
+@import url("tokens/tokens.css");
+@import url("base/base.css");
+@import url("components/shell/shell.css");
+@import url("components/login/login.css");
+@import url("components/card/card.css");
+@import url("components/status/status.css");
+@import url("components/panel/panel.css");
+@import url("components/list/list.css");
+@import url("components/gantt/gantt.css");
+@import url("components/drawer/drawer.css");
+@import url("components/focus/focus.css");
+@import url("components/dialog/dialog.css");
+@import url("components/notes/notes.css");

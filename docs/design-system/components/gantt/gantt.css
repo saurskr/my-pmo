@@ -1,0 +1,27 @@
+/* Timeline (Gantt): label column, month header, bars, today marker. */
+
+/* gantt */
+.gantt-scroll { overflow-x: auto; }
+.gantt { position: relative; min-width: 100%; }
+.g-row { display: flex; height: 34px; border-bottom: 1px solid var(--line); }
+.g-row:last-child { border-bottom: 0; }
+.g-row.head { height: 42px; align-items: flex-start; background: var(--surface-2); font-size: 12px; color: var(--muted); }
+.g-label { flex: none; width: var(--lw); position: sticky; left: 0; z-index: 3; background: var(--surface); border-right: 1px solid var(--line); display: flex; align-items: center; gap: 8px; padding: 0 10px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; }
+.g-row.head .g-label { background: var(--surface-2); cursor: default; height: 100%; }
+.g-label.child { padding-left: 26px; }
+.g-label span.t { overflow: hidden; text-overflow: ellipsis; }
+.g-time { position: relative; flex: none; }
+.g-month { position: absolute; top: 0; bottom: 0; padding: 6px 6px; border-left: 1px solid var(--line); white-space: nowrap; overflow: hidden; }
+.g-overlay { position: absolute; top: 42px; bottom: 0; left: var(--lw); pointer-events: none; z-index: 1; }
+.g-line { position: absolute; top: 0; bottom: 0; border-left: 1px solid var(--line); opacity: .7; }
+.g-today { position: absolute; top: -42px; bottom: 0; border-left: 2px solid var(--accent); z-index: 2; }
+.g-today::before { content: "Today"; position: absolute; top: 24px; left: -18px; font-size: 10px; font-weight: 700; line-height: 14px; padding: 0 6px; border-radius: 999px; background: var(--accent); color: var(--accent-text); }
+.g-bar { position: absolute; top: 8px; height: 18px; border-radius: 5px; background: var(--c); cursor: pointer; border: 0; padding: 0; min-width: 8px; z-index: 1; }
+.g-bar:hover { filter: brightness(1.12); }
+.g-bar.hollow { background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--c) 35%, transparent) 0 5px, color-mix(in srgb, var(--c) 15%, transparent) 5px 10px); border: 1px solid var(--c); }
+.g-bar.proj { height: 14px; top: 10px; }
+.g-bar.cut-l { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.g-bar.cut-r { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.g-nodate { padding: 0 12px; display: flex; align-items: center; color: var(--muted); font-size: 12px; }
+
+.g-row.head .g-time { align-self: stretch; }

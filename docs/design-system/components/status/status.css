@@ -1,0 +1,17 @@
+/* Status icon + chip. Needs tokens/tokens.css (colours come from its variables). */
+.sic { display: inline-flex; vertical-align: middle; flex: none; }
+.sic svg { display: block; }
+.sic .cut { stroke: var(--on-status); } /* glyph drawn on top of a filled status shape */
+
+/* A small rounded label; set its colour with style="--c: var(--blue)". */
+.chip {
+  display: inline-block; padding: 0 8px; border-radius: 999px;
+  font-size: 12px; font-weight: 600; line-height: 20px; white-space: nowrap;
+  background: color-mix(in srgb, var(--c) 18%, transparent);
+  color: var(--c);
+  border: 1px solid color-mix(in srgb, var(--c) 40%, transparent);
+}
+
+button.chip { cursor: pointer; }
+button.chip.off { opacity: .45; }
+.tag { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; }

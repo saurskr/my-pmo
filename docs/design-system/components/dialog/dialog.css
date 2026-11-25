@@ -1,0 +1,11 @@
+/* Modal dialog (swap picker). */
+
+dialog#swap { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); color: var(--text); box-shadow: var(--shadow); padding: 20px; width: min(440px, 92vw); text-align: left; }
+dialog#swap::backdrop { background: rgba(10, 14, 20, .4); }
+dialog#swap h3 { margin: 0 0 6px; }
+dialog#swap p { margin: 0 0 12px; color: var(--muted); }
+.swap-list { display: flex; flex-direction: column; gap: 6px; }
+.swap-list button { display: flex; align-items: center; gap: 10px; text-align: left; }
+.swap-list .nm { flex: 1; font-weight: 600; }
+.swap-list button small { color: var(--muted); }
+.swap-actions { margin-top: 14px; display: flex; justify-content: flex-end; }

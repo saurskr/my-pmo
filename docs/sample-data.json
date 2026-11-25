@@ -1,0 +1,288 @@
+{
+  "_about": "Sample data for the my-pmo demo. Dates may be written as YYYY-MM-DD, or relative to today as +10d / -40d (and 0d for today), so the demo always looks current. Edit this file and rebuild.",
+  "labels": [
+    "Update",
+    "Decision",
+    "Risk",
+    "Blocker",
+    "Action",
+    "Question",
+    "FYI"
+  ],
+  "items": [
+    {
+      "id": "erp",
+      "type": "project",
+      "name": "ERP migration",
+      "team": "Finance Systems",
+      "status": "atrisk",
+      "start": "-120d",
+      "end": "+150d",
+      "focus": true,
+      "focusWhy": "Cutover date locked, mapping sign-off late.",
+      "summary": "Cutover date holding, but data-mapping sign-off is late.",
+      "details": "Sponsor: CFO. Vendor is running two workstreams in parallel.\n\nKey dependency: finance sign-off on chart-of-accounts mapping before UAT can start.",
+      "notes": [
+        {
+          "id": "erp-n1",
+          "at": "-2d",
+          "label": "Risk",
+          "text": "Mapping sign-off now 2 weeks late. If not signed by month end UAT slips into the freeze window."
+        },
+        {
+          "id": "erp-n2",
+          "at": "-9d",
+          "label": "Decision",
+          "text": "Agreed to keep big-bang cutover rather than phase by entity."
+        },
+        {
+          "id": "erp-n3",
+          "at": "-20d",
+          "label": "Update",
+          "text": "Vendor confirmed second environment is ready."
+        }
+      ]
+    },
+    {
+      "id": "erp-map",
+      "type": "project",
+      "parentId": "erp",
+      "name": "Data mapping sign-off",
+      "team": "Finance",
+      "status": "offtrack",
+      "start": "-40d",
+      "end": "-5d",
+      "focus": true,
+      "focusWhy": "Blocks UAT start.",
+      "summary": "Waiting on Finance controller review.",
+      "notes": [
+        {
+          "id": "map-n1",
+          "at": "-3d",
+          "label": "Blocker",
+          "text": "Controller out until next week; asked deputy to review in the meantime."
+        }
+      ]
+    },
+    {
+      "id": "erp-uat",
+      "type": "project",
+      "parentId": "erp",
+      "name": "UAT & cutover rehearsal",
+      "team": "QA / Finance",
+      "status": "notstarted",
+      "start": "+10d",
+      "end": "+80d",
+      "summary": "Starts once mapping is signed off."
+    },
+    {
+      "id": "zt",
+      "type": "project",
+      "name": "Zero-trust network rollout",
+      "team": "Infrastructure",
+      "status": "ontrack",
+      "start": "-60d",
+      "end": "+90d",
+      "summary": "Phase 1 (HQ) complete, branch sites next.",
+      "notes": [
+        {
+          "id": "zt-n1",
+          "at": "-6d",
+          "label": "Update",
+          "text": "HQ cutover finished with no major incidents."
+        },
+        {
+          "id": "zt-n2",
+          "at": "-30d",
+          "label": "Decision",
+          "text": "Branch rollout to be done by region, EMEA first."
+        }
+      ]
+    },
+    {
+      "id": "cloud",
+      "type": "vendor",
+      "name": "Cloud vendor contract renewal",
+      "team": "Procurement",
+      "status": "atrisk",
+      "start": "-14d",
+      "end": "+35d",
+      "focus": true,
+      "focusWhy": "3-year commit decision due.",
+      "summary": "Pricing discussion open; they want 3-year commit.",
+      "notes": [
+        {
+          "id": "cl-n1",
+          "at": "-1d",
+          "label": "Question",
+          "text": "Can we get a 2-year term with the same discount? Procurement to ask."
+        },
+        {
+          "id": "cl-n2",
+          "at": "-12d",
+          "label": "Action",
+          "text": "Send usage forecast to vendor."
+        }
+      ]
+    },
+    {
+      "id": "msp",
+      "type": "vendor",
+      "name": "Managed print provider",
+      "team": "End User Services",
+      "status": "ontrack",
+      "start": "-200d",
+      "end": "+160d",
+      "summary": "Service levels met for the last two quarters.",
+      "notes": [
+        {
+          "id": "msp-n1",
+          "at": "-15d",
+          "label": "Update",
+          "text": "Quarterly service review held; no open escalations."
+        }
+      ]
+    },
+    {
+      "id": "sd",
+      "type": "roadmap",
+      "name": "Service desk tooling review",
+      "team": "End User Services",
+      "status": "onhold",
+      "start": "-30d",
+      "end": "+60d",
+      "summary": "Paused until budget cycle completes.",
+      "notes": [
+        {
+          "id": "sd-n1",
+          "at": "-25d",
+          "label": "Decision",
+          "text": "Pause until FY budget is confirmed."
+        }
+      ]
+    },
+    {
+      "id": "mfa",
+      "type": "project",
+      "name": "MFA for contractors",
+      "team": "Security",
+      "status": "done",
+      "start": "-90d",
+      "end": "-12d",
+      "summary": "Completed; 98% enrolled.",
+      "notes": [
+        {
+          "id": "mfa-n1",
+          "at": "-12d",
+          "label": "Update",
+          "text": "Closed out. Remaining accounts are dormant and will be disabled."
+        }
+      ]
+    },
+    {
+      "id": "dr",
+      "type": "roadmap",
+      "name": "DR test — Q1",
+      "team": "Infrastructure",
+      "status": "notstarted",
+      "start": "+120d",
+      "end": "+150d",
+      "summary": "Scope to be agreed with app owners."
+    },
+    {
+      "id": "ai",
+      "type": "roadmap",
+      "name": "AI adoption program",
+      "team": "IT Leadership",
+      "status": "notstarted",
+      "start": "+30d",
+      "end": "+300d",
+      "focus": true,
+      "focusWhy": "Agree sponsor before budget cycle.",
+      "summary": "Not yet an official project; agree scope and sponsor first.",
+      "details": "Idea: structured program to help teams adopt AI tooling safely.\n\nOpen questions: sponsor, budget, policy owner.",
+      "notes": [
+        {
+          "id": "ai-n1",
+          "at": "-4d",
+          "label": "Question",
+          "text": "Who owns the AI usage policy — Security or Legal?"
+        }
+      ]
+    },
+    {
+      "id": "qw1",
+      "type": "quickwin",
+      "name": "Automate new-starter laptop checklist",
+      "team": "End User Services",
+      "status": "ontrack",
+      "start": "-5d",
+      "end": "+9d",
+      "effort": 12,
+      "summary": "Script drafted, needs testing.",
+      "notes": [
+        {
+          "id": "qw1-n1",
+          "at": "-2d",
+          "label": "Update",
+          "text": "Draft script works for Windows; Mac version next."
+        }
+      ]
+    },
+    {
+      "id": "qw2",
+      "type": "quickwin",
+      "name": "Remove unused SaaS licences",
+      "team": "IT Operations",
+      "status": "notstarted",
+      "start": "+7d",
+      "end": "+21d",
+      "effort": 6,
+      "summary": "Export usage report and cancel dormant seats."
+    }
+  ],
+  "journal": [
+    {
+      "id": "j1",
+      "date": "0d",
+      "label": "Idea",
+      "meeting": "Weekly vendor sync",
+      "text": "Ask the cloud vendor for a 2-year term at the 3-year price. Bring the usage forecast."
+    },
+    {
+      "id": "j2",
+      "date": "0d",
+      "label": "Reminder",
+      "meeting": "",
+      "text": "Send the board pack by Friday: ERP status, vendor decision, and the AI adoption one-pager."
+    },
+    {
+      "id": "j3",
+      "date": "-1d",
+      "label": "Decision",
+      "meeting": "Steering committee",
+      "text": "Agreed to keep the ERP big-bang cutover. Finance to confirm the mapping sign-off date by Wednesday."
+    },
+    {
+      "id": "j4",
+      "date": "-3d",
+      "label": "Follow-up",
+      "meeting": "Weekly vendor sync",
+      "text": "Procurement to confirm renewal dates and any price-hold clause."
+    },
+    {
+      "id": "j5",
+      "date": "-6d",
+      "label": "Idea",
+      "meeting": "",
+      "text": "Quick win: cancel dormant SaaS seats before the next billing run."
+    },
+    {
+      "id": "j6",
+      "date": "-8d",
+      "label": "Personal",
+      "meeting": "",
+      "text": "Block time next week for the budget cycle prep."
+    }
+  ]
+}
